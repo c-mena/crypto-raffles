@@ -128,4 +128,4 @@ Contributions are welcome. Please follow these steps:
 
 ---
 
-*This project was developed as a proof of concept in Motoko, my first program in this language. 😊*
+*This project was developed as a proof of concept in Motoko, my first program in this language.* 😊

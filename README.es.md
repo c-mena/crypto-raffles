@@ -100,9 +100,9 @@ El backend expone múltiples funciones para interactuar con los sorteos:
 - `raffleMakeTheDraw`: Realizar el sorteo y seleccionar ganadores
 - `raffleWinners`: Consultar los ganadores de un sorteo
 - `raffleAvailableTickets`: Consultar los boletos disponibles en un sorteo
-- `rafflePurchasedTickets`: Consultar los boletos comprados de un sorteo
+- `rafflePurchasedTickets`: Consultar los boletos comprados en un sorteo
 - `raffleFindBuyer`: Busca al comprador de un boleto en un sorteo
-- `raffleFindTickets`: Busca los boletos compradors por una ientidad un sorteo
+- `raffleFindTickets`: Busca los boletos comprados por una identidad en un sorteo
 - ...
 
 Al desplegar el proyecto, se generan automáticamente URLs para acceder a una interfaz básica de usuario Candid UI. Esta interfaz permite evaluar todas las funcionalidades del backend de manera interactiva, sin necesidad de un frontend personalizado. Cada función del backend puede ser probada directamente desde esta interfaz, facilitando las pruebas y verificación del funcionamiento del sistema.
@@ -126,4 +126,4 @@ Las contribuciones son bienvenidas. Por favor, siga estos pasos:
 
 ---
 
-*Este proyecto fue desarrollado como prueba de concepto en Motoko, mi primer programa en este lenguaje. 😊* 
+*Este proyecto fue desarrollado como prueba de concepto en Motoko, mi primer programa en este lenguaje.* 😊
