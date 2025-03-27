@@ -58,7 +58,6 @@ module {
     public var status_ : Status = #Open;
     public var availableTicketsCount_ : Ticket = setup.maxTickets;
     public var purchasedTicketsCount_ : Ticket = 0;
-    public var playersCount_ : Nat = 0; // Required to fix bug in Map.size(). Map.size() outputs 1 with empty map!
     public var players_ : Map.Map<Principal, [Ticket]> = Map.new<Principal, [Ticket]>();
     public var winners_ : ?[Winner] = null;
     public var ticketIsAvailable_ = ?Array.init<Bool>(Nat16.toNat(setup.maxTickets), true);
@@ -66,7 +65,7 @@ module {
 
   public func setup(raffle : Raffle) : Setup = raffle.setup;
   public func status(raffle : Raffle) : Status = raffle.status_;
-  public func playersCount(raffle : Raffle) : Nat = raffle.playersCount_;
+  public func playersCount(raffle : Raffle) : Nat = Map.size(raffle.players_);
   public func purchasedTicketsCount(raffle : Raffle) : Ticket = raffle.purchasedTicketsCount_;
   public func availableTicketsCount(raffle : Raffle) : Ticket = raffle.availableTicketsCount_;
 
@@ -99,10 +98,8 @@ module {
 
     var newTicketsCount : Ticket = 0;
     var purchasedTickets = Buffer.Buffer<Ticket>(0);
-    var isOldBuyer = false;
     label oldBuy switch (Map.get(raffle.players_, phash, buyer)) {
       case (?oldTickets) {
-        isOldBuyer := true;
         purchasedTickets := Buffer.fromArray<Ticket>(oldTickets);
       };
       case (null) { break oldBuy };
@@ -129,9 +126,6 @@ module {
     };
 
     if (newTicketsCount > 0) {
-      if (not isOldBuyer) {
-        raffle.playersCount_ += 1;
-      };
       raffle.purchasedTicketsCount_ += newTicketsCount;
       raffle.availableTicketsCount_ -= newTicketsCount;
       if (raffle.availableTicketsCount_ == 0) {
@@ -349,7 +343,6 @@ module {
         };
         case (_) {
           random := Random.Finite(await Random.blob());
-          // Debug.print("getUniqueRandomNumbers 4 - random");
         };
       };
     };
