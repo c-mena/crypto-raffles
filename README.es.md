@@ -94,11 +94,12 @@ El backend expone múltiples funciones para interactuar con los sorteos:
 - `status`: Resumen de todos los sorteos
 - `createRaffle`: Crear un nuevo sorteo
 - `raffleSetup`: Consultar la configuración de un sorteo
-- `raffleStatus`: Consultar el estado de un sorteo
+- `raffleSummary`: Resumen de un sorteo
 - `raffleBuySelectedTickets`: Comprar boletos específicos
 - `raffleBuyRandomTickets`: Comprar boletos aleatorios
-- `raffleMakeTheDraw`: Realizar el sorteo y seleccionar ganadores
+- `raffleMakeTheDraw`: Realizar el sorteo y seleccionar ganadores aleatoriamente
 - `raffleWinners`: Consultar los ganadores de un sorteo
+- `raffleStatus`: Consultar el estado de un sorteo
 - `raffleAvailableTickets`: Consultar los boletos disponibles en un sorteo
 - `rafflePurchasedTickets`: Consultar los boletos comprados en un sorteo
 - `raffleFindBuyer`: Busca al comprador de un boleto en un sorteo

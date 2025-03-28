@@ -95,14 +95,15 @@ The backend exposes multiple functions to interact with raffles:
 
 - `status`: Summary of all raffles
 - `createRaffle`: Create a new raffle
-- `raffleSetup`: Check the configuration of a raffle
-- `raffleStatus`: Check the status of a raffle
+- `raffleSetup`: Consult the configuration of a raffle
+- `raffleSummary`: Summary of a raffle
 - `raffleBuySelectedTickets`: Purchase specific tickets
 - `raffleBuyRandomTickets`: Purchase random tickets
-- `raffleMakeTheDraw`: Conduct the raffle and select winners
-- `raffleWinners`: Check the winners of a raffle
-- `raffleAvailableTickets`: Check available tickets in a raffle
-- `rafflePurchasedTickets`: Check purchased tickets in a raffle
+- `raffleMakeTheDraw`: Conduct the raffle and randomly select winners
+- `raffleWinners`: Consult the winners of a raffle
+- `raffleStatus`: Consult the status of a raffle
+- `raffleAvailableTickets`: Consult available tickets in a raffle
+- `rafflePurchasedTickets`: Consult purchased tickets in a raffle
 - `raffleFindBuyer`: Find the buyer of a specific ticket in a raffle
 - `raffleFindTickets`: Find tickets purchased by an identity in a raffle
 - ...
