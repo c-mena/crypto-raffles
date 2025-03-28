@@ -123,6 +123,13 @@ actor {
     };
   };
 
+  public query func raffleSummary(id : Raffle.Id) : async ResultT<Raffle.Summary> {
+    switch (raffle(id)) {
+      case (null) { #err(Utils.msg.raffleNotFound) };
+      case (?raffle) { #ok(Raffle.summary(raffle)) };
+    };
+  };
+
   public query func raffleStatus(id : Raffle.Id) : async ResultT<Raffle.Status> {
     switch (raffle(id)) {
       case (null) { #err(Utils.msg.raffleNotFound) };

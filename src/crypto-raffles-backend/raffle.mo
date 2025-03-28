@@ -39,6 +39,14 @@ module {
     ticket : Ticket;
   };
 
+  public type Summary = {
+    status : Status;
+    availableTickets : Ticket;
+    purchasedTickets : Ticket;
+    players : Id;
+    winners : Id;
+  };
+
   // Immutable data
   public type Setup = {
     owner : Principal;
@@ -67,6 +75,17 @@ module {
   public func playersCount(raffle : Raffle) : Nat = Map.size(raffle.players_);
   public func purchasedTicketsCount(raffle : Raffle) : Ticket = raffle.purchasedTicketsCount_;
   public func availableTicketsCount(raffle : Raffle) : Ticket = raffle.availableTicketsCount_;
+
+  public func summary(raffle : Raffle) : Summary {
+    let summary : Summary = {
+      status = raffle.status_;
+      availableTickets = raffle.availableTicketsCount_;
+      purchasedTickets = raffle.purchasedTicketsCount_;
+      players = Map.size(raffle.players_);
+      winners = if (raffle.status_ != #Drawn) 0 else raffle.setup.prizes.size();
+    };
+    summary;
+  };
 
   public func purchasedTickets(raffle : Raffle, player : Principal) : ResultT<[Ticket]> {
     switch (Map.get(raffle.players_, phash, player)) {
