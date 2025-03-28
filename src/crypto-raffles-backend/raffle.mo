@@ -19,7 +19,6 @@ module {
   public type Id = Nat;
   public type Ticket = Nat16;
   public type Price = Nat;
-  public type PlayerIdx = Ticket;
 
   public type ResultT<T> = Result.Result<T, Text>;
 
@@ -59,7 +58,7 @@ module {
     public var availableTicketsCount_ : Ticket = setup.maxTickets;
     public var purchasedTicketsCount_ : Ticket = 0;
     public var players_ : Map.Map<Principal, [Ticket]> = Map.new<Principal, [Ticket]>();
-    public var winners_ : ?[Winner] = null;
+    public var winners_ : ?[Winner] = null; // Prize is obtained from setup.prizes, in the corresponding position
     public var ticketIsAvailable_ = ?Array.init<Bool>(Nat16.toNat(setup.maxTickets), true);
   };
 

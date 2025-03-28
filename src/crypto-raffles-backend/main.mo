@@ -6,14 +6,13 @@ import Nat "mo:base/Nat";
 import Nat16 "mo:base/Nat16";
 import Order "mo:base/Order";
 import Principal "mo:base/Principal";
-import Result "mo:base/Result";
 import Time "mo:base/Time";
 
 import Raffle "./raffle";
 import Utils "./utils";
 
 actor {
-  type ResultT<T> = Result.Result<T, Text>;
+  type ResultT<T> = Raffle.ResultT<T>;
 
   type Summary = {
     raffles : Nat;
@@ -73,7 +72,7 @@ actor {
         };
       };
 
-      let sortedPrices : [Nat] = Array.sort<Nat>(
+      let sortedPrizes : [Nat] = Array.sort<Nat>(
         prizes,
         func(a, b) : Order.Order {
           if (a > b) { #less } // descending order
@@ -91,7 +90,7 @@ actor {
         ticketPrice = ticketPrice;
         priceToken = priceToken;
         maxTickets = maxTickets;
-        prizes = sortedPrices;
+        prizes = sortedPrizes;
         prizeToken = prizeToken;
       };
 
