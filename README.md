@@ -52,19 +52,9 @@ Crypto Raffles enables the creation, management, and participation in raffles in
    ```
 
 2. Install dependencies:
-   - Install the IC SDK ([installation instructions](https://internetcomputer.org/docs/building-apps/getting-started/install))
-   - Install Mops CLI:
-     ```bash
-     # With curl
-     curl -fsSL cli.mops.one/install.sh | sh
-     # Or with npm
-     npm i -g ic-mops
-     ```
-   - Initialize and install project dependencies:
-     ```bash
-     mops init
-     mops install
-     ```
+    ```bash
+    ./setup.sh
+    ```
 
 3. Start the local Internet Computer replica:
    ```bash
