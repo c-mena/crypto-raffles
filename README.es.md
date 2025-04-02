@@ -10,7 +10,7 @@ Crypto Raffles permite la creación, gestión y participación en sorteos de man
 - **Creación de Sorteos**: Los usuarios pueden crear nuevos sorteos especificando fecha de sorteo, precio de tickets, cantidad máxima de tickets y premios.
 - **Compra de Tickets**: Participantes pueden comprar tickets específicos o aleatorios, por unidad o en paquetes.
 - **Validación de Disponibilidad**: Verificación automática de la disponibilidad de tickets.
-- **Realización de Sorteos**: Proceso aleatorio y verificable para la selección de ganadores. Solamente el creador del sorteo, autenticado, puede requerir la realización del sorteo.
+- **Realización de Sorteos**: Proceso aleatorio y verificable para la selección de ganadores, ejecutado automáticamente en la fecha programada. Alternativamente, el creador del sorteo puede requerir la realización anticipada del sorteo.
 - **Transparencia Total**: Toda la información sobre tickets comprados, ganadores y premios es pública y verificable.
 - **Autenticación Segura**: Implementación de [Internet Identity](https://identity.ic0.app/) para garantizar una autenticación segura, privada y descentralizada.
 

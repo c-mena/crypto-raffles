@@ -12,7 +12,7 @@ Crypto Raffles enables the creation, management, and participation in raffles in
 - **Raffle Creation**: Users can create new raffles by specifying draw date, ticket price, maximum number of tickets, and prizes.
 - **Ticket Purchase**: Participants can buy specific or random tickets, per unit or in packs.
 - **Availability Validation**: Automatic verification of ticket availability.
-- **Raffle Drawing**: Random and verifiable process for winner selection. Only the authenticated raffle creator can request the drawing process.
+- **Raffle Drawing**: Random and verifiable process for the selection of winners, executed automatically on the scheduled date. Alternatively, the raffle creator may require the raffle to be drawn in advance.
 - **Complete Transparency**: All information about purchased tickets, winners, and prizes is public and verifiable.
 - **Secure Authentication**: Implementation of [Internet Identity](https://identity.ic0.app/) to ensure secure, private, and decentralized authentication.
 
