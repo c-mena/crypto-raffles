@@ -1,18 +1,21 @@
 import Array "mo:base/Array";
 import Buffer "mo:base/Buffer";
-import DateTimeComp "mo:datetime/Components";
+import Debug "mo:base/Debug";
 import Hash "mo:base/Hash";
 import Iter "mo:base/Iter";
-import Map "mo:map/Map";
-import { phash } "mo:map/Map";
 import Nat "mo:base/Nat";
 import Nat16 "mo:base/Nat16";
 import Principal "mo:base/Principal";
 import Random "mo:base/Random";
 import Result "mo:base/Result";
 import Text "mo:base/Text";
+import Time "mo:base/Time";
 import TrieSet "mo:base/TrieSet";
-import Debug "mo:base/Debug";
+
+import { phash } "mo:map/Map";
+import DateTimeComp "mo:datetime/Components";
+import Map "mo:map/Map";
+
 import Utils "./utils";
 
 module {
@@ -77,12 +80,22 @@ module {
   public func availableTicketsCount(raffle : Raffle) : Ticket = raffle.availableTicketsCount_;
 
   public func summary(raffle : Raffle) : Summary {
+    var winnersSize = 0;
+    if (raffle.status_ == #Drawn) {
+      switch (raffle.winners_) {
+        case (null) { () };
+        case (?winners) {
+          winnersSize := Array.size(winners);
+        };
+      };
+    };
+
     let summary : Summary = {
       status = raffle.status_;
       availableTickets = raffle.availableTicketsCount_;
       purchasedTickets = raffle.purchasedTicketsCount_;
       players = Map.size(raffle.players_);
-      winners = if (raffle.status_ != #Drawn) 0 else raffle.setup.prizes.size();
+      winners = winnersSize;
     };
     summary;
   };
@@ -188,6 +201,7 @@ module {
     };
   };
 
+  // Make the raffle immediately, ignoring drawDate configured. Only runnable by the creator of the raffle.
   public func makeTheDraw(raffle : Raffle, requestor : Principal) : async ResultT<[Winner]> {
     if (requestor != raffle.setup.owner) {
       return #err(Utils.msg.onlyOwnerCanDraw);
@@ -196,7 +210,17 @@ module {
       return #err(Utils.msg.raffleAlreadyDrawn);
     };
     if (raffle.purchasedTicketsCount_ == 0) {
-      return #err(Utils.msg.noTicketsPurchased);
+      let delayTodrawDate = DateTimeComp.toTime(raffle.setup.drawDate) - Time.now(); // nanoseconds
+      if (delayTodrawDate > 0) {
+        // There is time left to buy tickets
+        return #err(Utils.msg.noTicketsPurchased);
+      } else {
+        // Drawn without winners
+        raffle.status_ := #Drawn;
+        raffle.winners_ := ?[];
+        raffle.ticketIsAvailable_ := null; // frees memory
+        return #ok([]);
+      };
     };
 
     let prizesCount = raffle.setup.prizes.size();
