@@ -1,12 +1,16 @@
 import Array "mo:base/Array";
-import DateTimeComp "mo:datetime/Components";
-import Map "mo:map/Map";
-import { nhash } "mo:map/Map";
+import Debug "mo:base/Debug";
+import Int "mo:base/Int";
 import Nat "mo:base/Nat";
 import Nat16 "mo:base/Nat16";
 import Order "mo:base/Order";
 import Principal "mo:base/Principal";
 import Time "mo:base/Time";
+import Timer "mo:base/Timer";
+
+import { nhash } "mo:map/Map";
+import DateTimeComp "mo:datetime/Components";
+import Map "mo:map/Map";
 
 import Raffle "./raffle";
 import Utils "./utils";
@@ -93,10 +97,10 @@ actor {
         prizes = sortedPrizes;
         prizeToken = prizeToken;
       };
-
       let raffle = Raffle.Raffle(setup);
       Map.set(raffles, hash, id, raffle);
       summary.openRaffles += 1;
+      ignore scheduleAutomaticDraw(id, raffle);
       return #ok(id);
     };
   };
@@ -233,14 +237,7 @@ actor {
       case (?raffle) {
         switch (await Raffle.makeTheDraw(raffle, caller)) {
           case (#ok(winners)) {
-            var raffleTotalPrizes = 0;
-            for (prize in raffle.setup.prizes.vals()) {
-              raffleTotalPrizes += prize;
-            };
-            summary.winners += winners.size();
-            summary.prizesGiven += raffleTotalPrizes;
-            summary.openRaffles -= 1;
-            summary.drawnRaffles += 1;
+            onUpdateWinners(raffle, winners);
             #ok(winners);
           };
           case (#err(err)) { #err(err) };
@@ -277,6 +274,17 @@ actor {
     };
   };
 
+  func onUpdateWinners(raffle : Raffle.Raffle, winners : [Raffle.Winner]) : () {
+    var raffleTotalPrizes = 0;
+    for (prize in raffle.setup.prizes.vals()) {
+      raffleTotalPrizes += prize;
+    };
+    summary.winners += winners.size();
+    summary.prizesGiven += raffleTotalPrizes;
+    summary.openRaffles -= 1;
+    summary.drawnRaffles += 1;
+  };
+
   public query func raffleAllPurchasedTickets(id : Raffle.Id) : async ResultT<[Raffle.Ticket]> {
     switch (raffle(id)) {
       case (null) { #err(Utils.msg.raffleNotFound) };
@@ -287,4 +295,39 @@ actor {
   func raffle(id : Raffle.Id) : ?Raffle.Raffle {
     Map.get(raffles, hash, id);
   };
+
+  func onUpgrade() : async () {
+    Debug.print("Reschedules timers on upgrade");
+    // Reschedules timers that have not executed their action, which have been stopped by the upgrade.
+    for ((id, raffle) in Map.entries(raffles)) {
+      if (raffle.status_ != #Drawn) {
+        ignore scheduleAutomaticDraw(id, raffle);
+      };
+    };
+  };
+
+  func executeScheduledDraw(id : Raffle.Id) : async () {
+    switch (raffle(id)) {
+      case (null) { Debug.print(Utils.msg.raffleNotFound) };
+      case (?raffle) {
+        switch (await Raffle.makeTheDraw(raffle, raffle.setup.owner)) {
+          case (#ok(winners)) {
+            onUpdateWinners(raffle, winners);
+            Debug.print("Scheduled drawing of raffle " # debug_show (id) # " carried out");
+          };
+          case (#err(err)) { Debug.print(err) };
+        };
+      };
+    };
+  };
+
+  func scheduleAutomaticDraw(id : Raffle.Id, raffle : Raffle.Raffle) : async () {
+    let delay = DateTimeComp.toTime(raffle.setup.drawDate) - Time.now(); // nanoseconds
+    if (delay >= 0) {
+      ignore Timer.setTimer<system>(#nanoseconds(Int.abs(delay)), func() : async () { await executeScheduledDraw(id) });
+    };
+  };
+
+  // Force execution of onUpgrade when the canister is upgraded
+  let _ = Timer.setTimer<system>(#seconds 0, onUpgrade);
 };
