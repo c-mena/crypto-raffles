@@ -39,8 +39,8 @@ Crypto Raffles enables the creation, management, and participation in raffles in
 ## How to Deploy
 
 ### Prerequisites
-- [DFINITY Canister SDK (dfx)](https://sdk.dfinity.org/docs/quickstart/local-quickstart.html)
-- Node.js and curl
+- Node.js (required by mops) and curl
+- [DFINITY Canister SDK (dfx)](https://internetcomputer.org/docs/building-apps/getting-started/quickstart)
 - [Mops](https://mops.one/) package manager
 
 ### Local Deployment Steps

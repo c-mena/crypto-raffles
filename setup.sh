@@ -6,7 +6,7 @@ if ! command -v curl &>/dev/null; then
 fi
 
 if ! command -v node &> /dev/null; then
-  echo "Error: Node.js is not installed. Install it and run the script again."
+  echo "Error: Node.js is not installed. It is required by mops. Install Node.js and run the script again."
   exit 1
 fi
 
